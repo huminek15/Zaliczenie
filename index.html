@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Todo List</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Todo List</h2>
+    <input type="text" id="todoInput" placeholder="Dodaj nowe zadanie">
+    <br><br>
+    <button onclick="addItem()">Dodaj</button>
+    <br><br>
+    <input type="text" id="searchInput" placeholder="Szukaj">
+    <br><br>
+    <button onclick="searchItem()">Szukaj</button>
+    <br><br>
+    <select id="sortDirection">
+        <option value="asc">Alfabetycznie</option>
+        <option value="desc">Od tyłu</option>
+    </select>
+    <br><br>
+    <button onclick="sortItems()">Sortuj</button>
+    <br><br>
+    <ul id="todoList"></ul>
+</div>
+
+<script>
+    let todoList = [];
+    let originalTodoList = [];
+
+    function renderTodoList(list) {
+        const todoListElement = document.getElementById("todoList");
+        todoListElement.innerHTML = "";
+        list.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Usuń";
+            deleteButton.onclick = () => removeItem(index);
+            li.appendChild(deleteButton);
+            todoListElement.appendChild(li);
+        });
+    }
+
+    function addItem() {
+        const todoInput = document.getElementById("todoInput");
+        const newItem = todoInput.value.trim();
+        if (newItem !== "") {
+            todoList.push(newItem);
+            originalTodoList.push(newItem);
+            renderTodoList(todoList);
+            todoInput.value = "";
+        }
+    }
+
+    function removeItem(index) {
+        if (index >= 0 && index < todoList.length) {
+            todoList.splice(index, 1);
+            renderTodoList(todoList);
+        }
+    }
+
+    function searchItem() {
+        const searchInput = document.getElementById("searchInput");
+        const keyword = searchInput.value.trim();
+        if (keyword !== "") {
+            const filteredList = originalTodoList.filter(item => item.toLowerCase().includes(keyword.toLowerCase()));
+            renderTodoList(filteredList);
+        } else {
+            renderTodoList(originalTodoList);
+        }
+    }
+
+    function sortItems() {
+        const sortDirection = document.getElementById("sortDirection").value;
+        if (sortDirection === "asc") {
+            todoList.sort();
+        } else if (sortDirection === "desc") {
+            todoList.sort().reverse();
+        }
+        renderTodoList(todoList);
+    }
+
+  
+
+    renderTodoList(todoList);
+</script>
+
+</body>
+</html>
